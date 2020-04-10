@@ -4,11 +4,15 @@
 
    <AppControlInput v-model="editedPost.title">Title</AppControlInput>
 
-   <AppControlInput v-model="editedPost.thumbnailLink">Thumbnail Link</AppControlInput>
+   <AppControlInput v-model="editedPost.thumbnail">Thumbnail Link</AppControlInput>
 
    <AppControlInput
              control-type="textarea"
              v-model="editedPost.content">Content</AppControlInput>
+
+   <AppControlInput
+             control-type="textarea"
+             v-model="editedPost.previewText">Preview Text</AppControlInput>
 
    <AppButton type="submit">Save</AppButton>
 
@@ -41,15 +45,16 @@ export default {
       : {
         author: '',
         title: '',
-        thumbnailLink: '',
-        content: ''
+        thumbnail: '',
+        content: '',
+        previewText: ''
       }
     }
   },
   methods: {
     onSave() {
       // TODO: Save the post
-      console.log(this.editedPost)
+      this.$emit('submit', this.editedPost)
     },
     onCancel() {
       // Navigate back
