@@ -1,9 +1,10 @@
 <template>
   <div class="single-post-page">
     <section class="post">
+      <img :src="loadedPost.thumbnail" :alt="loadedPost.title + ' image'">
       <h1 class="post-title">{{ loadedPost.title }}</h1>
       <div class="post-details">
-        <div class="post-detail">Last updated on {{ loadedPost.updatedDate }}</div>
+        <div class="post-detail">Last updated on {{ loadedPost.updatedDate | date }}</div>
         <div class="post-detail">Written by {{ loadedPost.author }}</div>
       </div>
       <p class="post-content">{{ loadedPost.content }}</p>
@@ -15,13 +16,12 @@
 </template>
 
 <script>
-import axios from 'axios';
 export default {
   asyncData(context) {
-    return axios.get(process.env.baseUrl + '/posts/' + context.params.id +  '.json')
-      .then(res => {
+    return context.app.$axios.$get('/posts/' + context.params.id +  '.json')
+      .then(data => {
         return {
-          loadedPost: res.data
+          loadedPost: data
         }
       })
       .catch(e => context.error(e));
@@ -84,5 +84,9 @@ export default {
 .post-feedback a:hover,
 .post-feedback a:active {
   color: salmon;
+}
+
+.post img {
+  max-width: 650px;
 }
 </style>

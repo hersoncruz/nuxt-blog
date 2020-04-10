@@ -34,7 +34,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~plugins/core-components.js'
+    '~plugins/core-components.js',
+    '~plugins/date-filter.js'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -45,7 +46,13 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
   ],
+
+  axios: {
+    baseURL: process.env.BASE_URL || 'https://nuxt-blog-bf220.firebaseio.com',
+    credentials: false
+  },
   /*
   ** Build configuration
   */
@@ -57,11 +64,13 @@ export default {
     }
   },
   env: {
-    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-bf220.firebaseio.com'
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-bf220.firebaseio.com',
+    fbAPIKey: 'AIzaSyAfwQPMIYQnGSGkJef2b2g9Pt5qc4NGXYI'
   },
-  router: {
-    linkActiveClass: 'active'
-  },
+  // router: {
+  //   linkActiveClass: 'active',
+  //   middleware: 'log'
+  // },
   transition: {
     name: 'fade',
     mode: 'out-in'

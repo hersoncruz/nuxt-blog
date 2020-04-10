@@ -6,9 +6,6 @@
 
 <script>
 export default {
-  components: {
-    PostList
-  },
   computed: {
     loadedPosts() {
       return this.$store.getters.loadedPosts

@@ -1,5 +1,4 @@
 import Vuex from "vuex";
-import axios from 'axios';
 
 const createStore = () => {
   return new Vuex.Store({
@@ -18,16 +17,19 @@ const createStore = () => {
           post => post.id === editedPost.id
         );
         state.loadedPosts[postIndex] = editedPost
+      },
+      setToken(state,token) {
+        state.token = token
       }
     },
     actions: {
       nuxtServerInit(vuexContext, context) {
-        return axios
-          .get(process.env.baseUrl + '/posts.json')
-          .then(res => {
+        return context.app.$axios
+          .$get('/posts.json')
+          .then(data => {
             const postsArray = []
-            for (const key in res.data) {
-              postsArray.push({ ...res.data[key], id: key })
+            for (const key in data) {
+              postsArray.push({ ...data[key], id: key })
             }
             vuexContext.commit('setPosts', postsArray)
           })
@@ -38,17 +40,17 @@ const createStore = () => {
           ...post,
           updatedDate: new Date()
         }
-        return axios
-        .post("https://nuxt-blog-bf220.firebaseio.com/posts.json", createdPost)
-        .then(result => {
-          vuexContext.commit('addPost', {...createdPost, id: result.data.name})
+        return this.$axios
+        .$post("/posts.json", createdPost)
+        .then(data => {
+          vuexContext.commit('addPost', {...createdPost, id: data.name})
         })
         .catch(e => console.log(e));
       },
       editPost(vuexContext, editedPost) {
-        return axios.put("https://nuxt-blog-bf220.firebaseio.com/posts/" +
+        return this.$axios.$put("/posts/" +
           editedPost.id +
-          ".json", editedPost)
+          ".json?auth=" + vuexContext.state.token, editedPost)
           .then(res => {
             vuexContext.commit('editPost', editedPost)
           })
@@ -56,6 +58,20 @@ const createStore = () => {
       },
       setPosts(vuexContext, posts) {
         vuexContext.commit("setPosts", posts);
+      },
+      authenticateUser(vuexContext, authData){
+        let authUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + process.env.fbAPIKey;
+        if(!authData.isLogin) {
+          authUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + process.env.fbAPIKey;
+        }
+        return this.$axios.$post(authUrl, {
+            email: authData.email,
+            password: authData.password,
+            returnSecureToken: true
+          }
+        ).then(result => {
+          vuexContext.commit("setToken", result.idToken);
+        }).catch(e => console.log(e));
       }
     },
     getters: {
