@@ -19,16 +19,23 @@ export default {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#fa923f', height: '4px', duration: 5000 },
+  loadingIndicator: {
+      name: 'circle',
+      color: '#fa923f'
+  },
   /*
   ** Global CSS
   */
   css: [
+    '~assets/styles/main.css'
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~plugins/core-components.js',
+    '~plugins/date-filter.js'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -39,7 +46,13 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
   ],
+
+  axios: {
+    baseURL: process.env.BASE_URL || 'https://nuxt-blog-bf220.firebaseio.com',
+    credentials: false
+  },
   /*
   ** Build configuration
   */
@@ -49,5 +62,17 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+  env: {
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-bf220.firebaseio.com',
+    fbAPIKey: 'AIzaSyAfwQPMIYQnGSGkJef2b2g9Pt5qc4NGXYI'
+  },
+  // router: {
+  //   linkActiveClass: 'active',
+  //   middleware: 'log'
+  // },
+  transition: {
+    name: 'fade',
+    mode: 'out-in'
   }
 }
