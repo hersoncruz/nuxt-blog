@@ -14,10 +14,18 @@
 
 <script>
 export default {
-  layout: 'admin',
+  layout: "admin",
+  middleware: ["check-auth", "auth"],
   computed: {
     loadedPosts() {
       return this.$store.getters.loadedPosts
+    }
+  },
+  methods: {
+    onLogout() {
+      this.$store.dispatch("logout");
+      this.$router.dispatch("/admin/auth");
+
     }
   }
 }
