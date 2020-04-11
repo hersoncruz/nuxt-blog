@@ -13,18 +13,19 @@
 </template>
 
 <script>
-import PostList from '@/components/Posts/PostList'
-import AppButton from '@/components/UI/AppButton'
-
 export default {
-  layout: 'admin',
-  components: {
-    PostList,
-    AppButton
-  },
+  layout: "admin",
+  middleware: ["check-auth", "auth"],
   computed: {
     loadedPosts() {
       return this.$store.getters.loadedPosts
+    }
+  },
+  methods: {
+    onLogout() {
+      this.$store.dispatch("logout");
+      this.$router.dispatch("/admin/auth");
+
     }
   }
 }
